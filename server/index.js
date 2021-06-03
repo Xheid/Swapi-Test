@@ -30,7 +30,7 @@ const validate = async (request, username, password, h) => {
 const init = async () => {
 
     const server = Hapi.server({
-        port: 3000,
+        port: 8080,
         host: 'localhost'
     });
 
@@ -40,6 +40,12 @@ const init = async () => {
     server.auth.default('simple');
 
     server.route({
+        config: {
+            cors: {
+                origin: ['*'],
+                additionalHeaders: ['Authorization']
+            }
+        },
         method: 'GET',
         path: '/{entity}',
         handler: async (request, h) => {
@@ -48,6 +54,9 @@ const init = async () => {
 
             if (request.query.id) {
                 url += request.query.id
+            }
+            if (request.query.page) {
+                url += request.query.page
             }
             if (request.query.wookiee === "true") {
                 url += '?format=wookiee'
